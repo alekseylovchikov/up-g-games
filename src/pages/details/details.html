@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <div *ngIf="game">
+      <ion-title>{{ game.name }}</ion-title>
+    </div>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <div *ngIf="game">
+    <div class="game-image">
+      <img src="https://images.igdb.com/igdb/image/upload/t_screenshot_med_2x/{{ game.screenshots[0].cloudinary_id }}.jpg" class="tinted" />
+    </div>
+
+    <div id="popover" [@fadeIn]>
+      <ion-grid>
+        <ion-row>
+          <ion-col col-6>
+            <h4>Рейтинг</h4>
+            <p class="larger-res">{{ game.popularity | number: '1.1-1' }}</p>
+          </ion-col>
+          <ion-col col-6>
+            <h4>Перспектива</h4>
+            <p *ngIf="perspective">{{ perspective.name }}</p>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col col-6>
+            <h4>Сайт</h4>
+            <button ion-button (click)="launchSite(game.websites[0].url)" small>
+              На сайт
+            </button>
+          </ion-col>
+          <ion-col col-6>
+            <h4>Дата выхода</h4>
+            <p>{{ game.first_release_date | date: shortDate }}</p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+
+    <ion-card padding [@fadeUp]>
+      <h4>Описание</h4>
+      <p>{{ game.summary }}</p>
+    </ion-card>
+
+    <div id="screenslider">
+      <h5>Скриншоты</h5>
+      <ion-scroll scrollX="true" class="item">
+        <ion-row [style.width]="game.screenshots.length+'00%'">
+          <ion-col *ngFor="let screenshot of game.screenshots">
+            <img src="https://images.igdb.com/igdb/image/upload/t_screenshot_med_2x/{{ screenshot.cloudinary_id }}.jpg" />
+          </ion-col>
+        </ion-row>
+      </ion-scroll>
+    </div>
+
+    <div *ngIf="game.videos">
+      <h5>Видео</h5>
+      <ion-list>
+        <button ion-item *ngFor="let video of game.videos" (click)="playVideo(video.video_id)">
+          <ion-icon name="play" small item-start color="primary" class="itemfix"></ion-icon>{{ video.name }}
+        </button>
+      </ion-list>
+    </div>
+  </div>
+</ion-content>

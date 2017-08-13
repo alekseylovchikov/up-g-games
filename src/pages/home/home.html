@@ -1,0 +1,59 @@
+<ion-header>
+  <ion-navbar color="primary">
+    <ion-title>
+      <div class="header">
+        <span>{{ genreName }}</span>
+        <ion-buttons>
+          <button ion-button icon-only icon-start (click)="openFavorites()" class="btn-txt">
+            <ion-icon name="star"></ion-icon>
+          </button>
+          <button ion-button icon-only icon-start (click)="openGenres()" class="btn-txt">
+            <ion-icon name="funnel"></ion-icon>
+          </button>
+          <button ion-button icon-only (click)="showSearchBox()">
+            <ion-icon name="search"></ion-icon>
+          </button>
+        </ion-buttons>
+      </div>
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="card-background-page">
+  <ion-searchbar (search)="search($event.target.value)" [ngClass]="{'show-search': showSearch}"></ion-searchbar>
+  <div *ngIf="games">
+    <ion-card *ngFor="let game of games" class="game-card" [@fadeOut]>
+      <div *ngIf="game.screenshots; then gamescreen else noscreen"></div>
+      <ng-template #gamescreen>
+        <div class="game-image">
+          <img src="https://images.igdb.com/igdb/image/upload/t_screenshot_med_2x/{{ game.screenshots[0].cloudinary_id }}.jpg" class="tinted" />
+        </div>
+      </ng-template>
+
+      <ng-template #noscreen>
+        <div class="game-image">
+          <img src="assets/img/blank.png" />
+        </div>
+      </ng-template>
+
+      <div *ngIf="favorites.indexOf(game.id) === -1; then fav else remove"></div>
+
+      <ng-template #fav>
+        <button ion-button outline medium color="primary" icon-only (click)="favorite(game.id)" class="fav-btn">
+          <ion-icon name="star-outline"></ion-icon>
+        </button>
+      </ng-template>
+
+      <ng-template #remove>
+        <button ion-button outline medium color="primary" icon-only (click)="removeFavorite(game.id)" class="fav-btn">
+          <ion-icon name="close-circle"></ion-icon>
+        </button>
+      </ng-template>
+
+      <div class="card-title" (click)="detailsPage(game.id)">{{ game.name }}</div>
+      <div class="card-subtitle" *ngIf="game.release_dates">
+        Дата выхода: {{ game.release_dates[0].m }}/{{ game.release_dates[0].y }}
+      </div>
+    </ion-card>
+  </div>
+</ion-content>
